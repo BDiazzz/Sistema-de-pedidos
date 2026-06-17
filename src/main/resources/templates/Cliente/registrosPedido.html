@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <header th:replace="~{homeCliente::menuSuperior}"></header>
+
+    <!-- Contenedor principal -->
+    <div class="container mt-3 mb-5">
+        
+
+        <!-- Iteración sobre los pedidos -->
+        <div th:each="asignaciones : ${listadoPedidos}" class="mb-3">
+            <a th:href="@{/Cliente/detalle/} +${asignaciones.idAsignacion}" class="text-decoration-none">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <!-- Columna: Estado -->
+                            <div class="me-3">
+                                <i class="bi bi-bicycle" 
+                                    th:classappend="${asignaciones.EstadoOrden.tipoEstado == 'FINALIZADO' ? 'text-success' : 'text-warning'}" 
+                                    style="font-size: 1.5rem;"></i>
+                            </div>
+                            <!-- Columna: Información del pedido -->
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1" th:text="${asignaciones.EstadoOrden.tipoEstado}"></h5>
+                                <p class="small text-muted mb-1">
+                                    Fecha: <span th:text="${asignaciones.fechaAsignacion}"></span>
+                                </p>
+                                <p class="mb-0 fw-bold">
+                                    Total: <span th:text="${'$' + asignaciones.pedido.totalAPagar}"></span>
+                                </p>
+                            </div>
+                            <!-- Columna: Ver más -->
+                            <div>
+                                <i class="bi bi-chevron-right text-muted" style="font-size: 1.2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="py-4"></div>
+
+    <div th:replace="~{homeCliente::menuInferior}"></div>
+    <footer th:replace="~{index::footer}"></footer>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+
+</html>

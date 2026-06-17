@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+
+    <!-- Contenedor principal -->
+    <div class="container mt-4 mb-5">
+        <!-- Estado del pedido -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="text-primary fw-bold" th:text="${asignacion.EstadoOrden.tipoEstado}"></h5>
+                <p class="mb-0 text-muted" th:text="${asignacion.fechaAsignacion}">Fecha</p>
+            </div>
+        </div>
+
+        <!-- Detalles del pedido -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="fw-bold mb-4">Tu pedido</h5>
+                <div th:each="detalle : ${detalles}" class="border-bottom pb-3 mb-3">
+                    <div class="row align-items-center">
+                        <!-- Imagen del producto -->
+                        <div class="col-3 col-md-2">
+                            <img th:src="${detalle.producto.enlaceImagen}" alt="Imagen del producto"
+                                class="img-fluid rounded" style="width: 100%; height: auto; object-fit: cover;">
+                        </div>
+                        <!-- Nombre y descripción -->
+                        <div class="col-9 col-md-4">
+                            <h6 class="fw-bold" th:text="${detalle.producto.nombreProducto}"></h6>
+                            <p class="text-muted mb-1 description" th:text="${detalle.producto.descripcionProducto}"></p>
+                            <span class="text-decoration-underline text-primary read-more" role="button">Leer más</span>
+                            <span class="text-decoration-underline text-primary read-less d-none" role="button">Leer menos</span>
+                        </div>
+                        <!-- Precio -->
+                        <div class="col-4 col-md-2 text-center">
+                            <p class="fw-bold mb-0">Precio</p>
+                            <p class="text-muted mb-0" th:text="${'$'+detalle.producto.precioProducto}"></p>
+                        </div>
+                        <!-- Cantidad -->
+                        <div class="col-4 col-md-2 text-center">
+                            <p class="fw-bold mb-0">Cantidad</p>
+                            <p class="text-muted mb-0" th:text="${detalle.cantidadDetalle + 'x'}"></p>
+                        </div>
+                        <!-- Total -->
+                        <div class="col-4 col-md-2 text-center">
+                            <p class="fw-bold mb-0">Total</p>
+                            <p class="text-muted mb-0" th:text="${'$'+detalle.subTotal}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen de costos -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="fw-bold mb-4">Resumen de tu pedido</h5>
+                <!-- Productos -->
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Productos</span>
+                    <span th:if="${asignacion.pedido.cupon == null && asignacion.pedido.puntos == null}"
+                        th:text="${'$'+asignacion.pedido.totalAPagar}"></span>
+                    <span th:if="${asignacion.pedido.cupon != null}"
+                        th:text="${'$'+totalSinDescuento}"></span>
+                    <span th:if="${asignacion.pedido.puntos != null}"
+                        th:text="${'$'+(asignacion.pedido.totalAPagar - (asignacion.pedido.puntos.cantidadPuntos / 100))}"></span>
+                </div>
+                <!-- Descuento -->
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Descuento</span>
+                    <span th:if="${asignacion.pedido.cupon == null}">$0</span>
+                    <span th:if="${asignacion.pedido.cupon != null}" th:text="${'-$'+descuento}"></span>
+                </div>
+                <!-- Puntos usados -->
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Puntos usados</span>
+                    <span th:if="${asignacion.pedido.puntos == null}">$0</span>
+                    <span th:if="${asignacion.pedido.puntos != null}"
+                        th:text="${'-$'+(-1*asignacion.pedido.puntos.cantidadPuntos/100)}"></span>
+                </div>
+                <!-- Total -->
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span th:text="${'$'+asignacion.pedido.totalAPagar}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script>
+        document.querySelectorAll('.read-more').forEach(button => {
+            button.addEventListener('click', function () {
+                const description = this.previousElementSibling;
+                description.classList.add('expanded');
+                this.classList.add('d-none');
+                this.nextElementSibling.classList.remove('d-none');
+            });
+        });
+        document.querySelectorAll('.read-less').forEach(button => {
+            button.addEventListener('click', function () {
+                const description = this.previousElementSibling.previousElementSibling;
+                description.classList.remove('expanded');
+                this.classList.add('d-none');
+                this.previousElementSibling.classList.remove('d-none');
+            });
+        });
+    </script>
+</body>
+
+</html>

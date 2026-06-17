@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+
+
+    <div class="container mt-4">
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Mis Direcciones</h1>
+            
+            <a th:href="@{/Cliente/Ubicacion/Crear}" class="btn btn-primary d-inline-flex align-items-center" data-bs-t="tooltip" data-bs-placement="top"
+                title="Agregar nueva dirección">
+                <i class="bi bi-plus me"></i>
+            </a>
+        </div>
+
+       
+        <div th:if="${Ubicaciones.isEmpty()}">
+            <p>No hay direcciones disponibles. <a th:href="@{/Cliente/Ubicacion/Crear}">Agrega una nueva dirección.</a></p>
+        </div>
+
+        <!-- Iteración sobre las ubicaciones -->
+        <div th:each="ubicacion : ${Ubicaciones}" class="address-card mb-3 p-3 border rounded">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="title">
+                        <strong th:text="${ubicacion.direccion + ', ' + ubicacion.numeroCasa}"></strong>
+                    </div>
+                    <div class="description" th:text="${ubicacion.referencia}"></div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <!-- Estado de la Ubicación: Activo o Inactivo -->
+                    
+                    <a class="text-decoration-none text-dark" data-bs-toggle="tooltip" 
+                    data-bs-placement="top" 
+                    th:title="${ubicacion.ubicacionActiva ? 'Esta ubicación está activa' : 'Esta ubicación está inactiva'}">
+                        <i  th:class="${ubicacion.ubicacionActiva ? 'bi bi-check-lg fw-bold fs-2' : ''}" ></i>
+                    </a>
+                    
+                    <!-- <span 
+                        th:class="${ubicacion.ubicacionActiva ? 'badge bg-success text-white' : 'badge bg-danger text-white'}" 
+                        th:text="${ubicacion.ubicacionActiva ? 'Activa' : 'Inactiva'}" 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top" 
+                        th:title="${ubicacion.ubicacionActiva ? 'Esta ubicación está activa' : 'Esta ubicación está inactiva'}">
+                         -->
+                        <!-- Íconos de Bootstrap -->
+                        <!-- <i th:class="${ubicacion.ubicacionActiva ? 'bi bi-check-circle' : 'bi bi-x-circle'}"></i>
+                    </span> -->
+                    
+                    <!-- Botón para abrir el modal -->
+                    <button 
+                        class="btn p-0 border-0 bg-transparent ms-2" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modalOpciones"
+                        th:attr="data-id=${ubicacion.idUbicacion}" 
+                        data-bs-t="tooltip" 
+                        data-bs-placement="top" 
+                        title="Opciones De Ubicación">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalOpciones" tabindex="-1" aria-labelledby="modalOpcionesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalOpcionesLabel">Opciones de Dirección</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Dirección:</strong> <span id="direccionModal"></span></p>
+                        <p><strong>Referencia:</strong> <span id="referenciaModal"></span></p>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <a id="editarDireccion" class="btn btn-primary" data-bs-t="tooltip" data-bs-placement="top" title="Editar dirección" href="#">Editar</a>
+                        <a id="eliminarDireccion" class="btn btn-danger ms-2" data-bs-t="tooltip" data-bs-placement="top" title="Eliminar dirección" href="#">Eliminar</a>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <script th:src="@{/js/modalOpcionesUbicacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+
+</html>

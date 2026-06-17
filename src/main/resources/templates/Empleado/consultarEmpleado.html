@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container mt-5">
+       
+        <div class="card p-4 shadow-sm">
+            
+          
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Consultar Empleado</h1>
+                <a href="/empleados" class="btn btn-secondary btn-sm" data-bs-t="tooltip"
+                data-bs-placement="top" title="Regresar">Regresar</a>
+            </div>
+
+            <!-- Formulario de consulta con campos solo lectura -->
+            <form th:object="${empleado}" class="border p-4 rounded bg-light">
+                <div class="mb-3">
+                    <label for="nombreEmpleado" class="form-label">Nombre:</label>
+                    <input type="text" th:field="*{nombreEmpleado}" id="nombreEmpleado" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="apellidoEmpleado" class="form-label">Apellido:</label>
+                    <input type="text" th:field="*{apellidoEmpleado}" id="apellidoEmpleado" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                    <input type="date" th:field="*{fechaNacimiento}" id="fechaNacimiento" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="generoEmpleado" class="form-label">Género:</label>           
+                    <input type="text" th:field="*{generoEmpleado}" id="generoEmpleado" class="form-control" readonly />
+                </div>                
+                
+                <div class="mb-3">
+                    <label for="duiEmpleado" class="form-label">DUI:</label>
+                    <input type="text" th:field="*{duiEmpleado}" id="duiEmpleado" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="correoUsuario" class="form-label">Correo:</label>
+                    <input type="email" th:field="*{usuario.correoUsuario}" id="correoUsuario" class="form-control" readonly />
+                </div>
+               
+
+                <div class="mb-3">
+                    <label for="roles" class="form-label">Cargo:</label>
+                    <input type="text" th:value="${empleado.usuario.roles[0].rolName}" id="roles" class="form-control" readonly />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+
+</html>

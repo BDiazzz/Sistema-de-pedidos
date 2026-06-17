@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <!-- Dentro de este contianer van a trabajar -->
+    <div class="container mt-4">
+        <!--Herencia de las  Alertas -->
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lista de Pedidos</h1>
+            <a data-bs-toggle="modal" data-bs-target="#clientesModal" title="Clientes" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Agregar Pedido
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Tabla -->
+            <div class="col-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nº</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Tiempo Estimado</th>
+                            <th scope="col">Fecha Pedido</th>
+                            <th scope="col">Fecha de Entrega</th>
+                            <th scope="col">Total</th>
+                            <th class="text-center" scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedido, stat : ${listadoPedidos}">
+                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <td
+                                th:text="${pedido.cliente != null ? pedido.cliente.nombreCliente + ' ' + pedido.cliente.apellidoCliente : 'Sin cliente asignado'}">
+                            </td>
+
+                            <td th:text="${pedido.tiempoEstimado}"></td>
+                            <td th:text="${#dates.format(pedido.fechaPedido, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${pedido.fechaEntregaP}"></td>
+                            <td th:text="${pedido.totalAPagar}"></td>
+                            <td class="text-center">
+                                <!-- hay que hacer botones de eliminar y editar-->
+                                <!-- Botón para Editar -->
+                                <a class="btn btn-primary editar-btn" data-bs-t="tooltip"
+                                    th:href="@{/Pedidos/agregar/}+${pedido.idPedido}" data-bs-placement="top"
+                                    title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <!-- Boton de eliminar -->
+                                <a class="btn btn-danger delete-btn"
+                                    th:href="@{/Pedidos/deletePedido/} +${pedido.idPedido}" data-bs-t="tooltip"
+                                    data-bs-placement="top" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal para seleccionar cliente-->
+        <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="clientesModalLabel">Seleccionar Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Select para clientes -->
+                        <form th:action="@{/Pedidos/seleccionarCliente}" method="post">
+                            <div class="mb-3">
+                                <label for="selectCliente" class="form-label">Clientes</label>
+                                <select id="selectCliente" class="form-select" name="idCliente" required>
+                                    <option th:each="cliente : ${listClientes}" th:value="${cliente.idCliente}"
+                                        th:text="${cliente.nombreCliente} + ' ' + ${cliente.apellidoCliente}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Es necesario seleccionar un cliente</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar selección</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación de eliminar -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{index::footer}"></footer>
+        <!-- <script type="text/javascript" th:src="@{/js/verDetallePedido.js}"></script>-->
+        <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+        <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <!-- Dentro de este contianer van a trabajar -->
+    <div class="container mt-4">
+
+        <!-- tarjeta  -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5>Detalles del Pedido</h5>
+            </div>
+            <div class="card-body">
+                <!-- informacion de pedido -->
+                <h6 class="mb-3 text-primary">Informacion</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="fechaEntrega" class="form-label fw-bold">Fecha de Entrega:</label>
+                        <p id="fechaEntrega" class="form-control"
+                            th:text="${asignacion.pedido != null && asignacion.pedido.fechaEntregaP != null ? #dates.format(asignacion.pedido.fechaEntregaP, 'dd/MM/yyyy') : 'No asignado'}">
+                        </p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tiempoEstimado" class="form-label fw-bold">Tiempo Estimado:</label>
+                        <p id="tiempoEstimado" class="form-control"
+                            th:text="${asignacion.pedido != null && asignacion.pedido.tiempoEstimado != null ? asignacion.pedido.tiempoEstimado : 'No asignado'}">
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fechaPedido" class="form-label fw-bold">Fecha Pedido:</label>
+                        <p id="fechaPedido" class="form-control"
+                            th:text="${asignacion.pedido != null && asignacion.pedido.fechaPedido != null ? #dates.format(asignacion.pedido.fechaPedido, 'dd/MM/yyyy') : 'No asignado'}">
+                        </p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="repartidor" class="form-label fw-bold">Repartidor:</label>
+                    <p id="repartidor" class="form-control"
+                        th:text="${asignacion.repartidor != null ? asignacion.repartidor.nombreRepartidor + ' ' + asignacion.repartidor.apellidoRepartidor : 'No asignado'}">
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <label for="descripcionPedido" class="form-label fw-bold">Descripción de Pedido:</label>
+                    <p id="descripcionOrden" class="form-control"
+                        th:text="${asignacion.pedido != null && asignacion.pedido.descripcionOrden != null ? asignacion.pedido.descripcionOrden : 'No asignado'}">
+                    </p>
+                </div>
+
+                <!-- datos personales de cliente -->
+                <h6 class="mb-3 text-success">Datos Personales</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="nombreCliente" class="form-label fw-bold">Nombre:</label>
+                        <p id="nombreCliente" class="form-control"
+                            th:text="${asignacion.pedido != null && asignacion.pedido.cliente != null && asignacion.pedido.cliente.nombreCliente != null ? asignacion.pedido.cliente.nombreCliente : 'No asignado'}">
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="apellidoCliente" class="form-label fw-bold">Apellido:</label>
+                        <p id="apellidoCliente" class="form-control"
+                            th:text="${asignacion.pedido != null && asignacion.pedido.cliente != null && asignacion.pedido.cliente.apellidoCliente != null ? asignacion.pedido.cliente.apellidoCliente : 'No asignado'}">
+                        </p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="direccion" class="form-label fw-bold">Dirección:</label>
+                    <p id="direccion" class="form-control"
+                        th:text="${asignacion.pedido != null && asignacion.pedido.ubicacion != null && asignacion.pedido.ubicacion.direccion != null ? asignacion.pedido.ubicacion.direccion : 'No asignado'}">
+                    </p>
+                </div>
+
+                <!-- Tabla de productos -->
+                <h6 class="mb-3 text-secondary">Productos</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead  text-start">
+                            <tr>
+                                <th scope="col">Nº</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">SubTotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fs-6">
+                            <tr th:each="detallePedido, stat: ${detallePedido}">
+                                <th scope="row" th:text="${stat.index + 1}"></th>
+                                <td th:text="${detallePedido.producto.nombreProducto}"></td>
+                                <td th:text="${detallePedido.producto.tipoProducto}"></td>
+                                <td th:text="${detallePedido.producto.descripcionProducto}"></td>
+                                <td th:text="${detallePedido.producto.precioProducto}"></td>
+                                <td th:text="${detallePedido.cantidadDetalle}"></td>
+                                <td th:text="${detallePedido.subTotal}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Total -->
+                <div class="text-end mt-3">
+                    <h5>Total a pagar $: <span class="text-success fw-bold"
+                            th:text="${asignacion.pedido.totalAPagar}"></span></h5>
+                </div>
+
+                <!-- Boton -->
+                <div class="text-start mt-4">
+                    <a th:href="@{/Pedidos/listaAsignaciones}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Regresar
+                    </a>
+                    <!--<a href="/generarFacturaPDF/${pedido.idPedido}" 
+                    target="_blank">Descargar/Ver Factura</a>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+</body>
+
+
+</html>

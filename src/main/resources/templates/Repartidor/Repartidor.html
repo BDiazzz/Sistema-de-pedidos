@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${titulo}"></title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+</head>
+
+<body>
+  <header th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg custom-navbar">
+      <div class="container-fluid d-flex flex-wrap align-items-center">
+        <a class="navbar-brand fw-bold text-white">Te lo llevo ya</a>
+        <div class="d-flex align-items-center ms-auto">
+          <span class="text-white fw-bold me-3 text-wrap"
+            th:text="${repartidor.nombreRepartidor} +' '+ ${repartidor.apellidoRepartidor}"></span>
+          <a class="btn btn-outline-light" th:href="@{/repartidor/estado/}">
+            <span th:text="${repartidor.estado} ? 'Activo' : 'Inactivo'"></span>
+            <i th:class="${repartidor.estado} ? 'bi bi-toggle-on' : 'bi bi-toggle-off'"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container mt-3 mb-5" th:classappend="${repartidor.estado}?'d-block':'d-none'">
+    <!--Herencia de las  Alertas -->
+    <div th:replace="~{alertas::alertas}"></div>
+    <h4 class="mb-4 text-center"><i class="bi bi-stopwatch me-2"></i>Pedidos en curso</h4>
+
+    <!-- Contenedor de tarjetas responsivas -->
+    <div class="row gy-3" th:each="asignacion : ${asignaciones}">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card mb-3 shadow-sm">
+
+          <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="bi bi-person-fill me-2"></i>
+            <span
+              th:text="${asignacion.pedido.cliente.nombreCliente} + ' ' + ${asignacion.pedido.cliente.apellidoCliente}"></span>
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-title text-wrap" th:text="${asignacion.pedido.descripcionOrden}"></h5>
+            <p class="card-text">
+              <strong>Total a pagar:</strong>
+              <span th:text="${asignacion.pedido.totalAPagar}"></span> Dólares
+            </p>
+            <p>
+              <strong>Tiempo estimado:</strong>
+              <span th:text="${asignacion.pedido.tiempoEstimado}"></span>
+            </p>
+            <p>
+              <strong>Estado del pedido:</strong>
+              <span th:text="${asignacion.estadoOrden.tipoEstado}"></span>
+            </p>
+          </div>
+
+          <div class="card-footer text-center">
+            <a th:if="${asignacion.estadoOrden.idEstadoOrden !=3}"
+              th:href="@{/repartidor/pedidoencurso/{id} (id=${asignacion.idAsignacion})}" class="btn btn-primary w-100">
+              Ir a pedido en curso
+            </a>
+            <a th:if="${asignacion.estadoOrden.idEstadoOrden==3}"
+              th:href="@{/repartidor/pedidoencurso/{id} (id=${asignacion.idAsignacion})}"
+              class="btn btn-secondary w-100"> Detalles del pedido
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-4"></div>
+  <a class="btn btn-light  w-100 position-fixed bottom-0 start-0 py-3" th:href="@{/logout}">
+    <i class="bi bi-box-arrow-right"></i>
+    Cerrar Sesión
+  </a>
+  <footer th:replace="~{index::footer}"></footer>
+</body>
+
+
+</html>

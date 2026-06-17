@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index:: head}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${titulo}">Cupones</title>
+</head>
+
+<body>
+  <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+
+  <div class="container mt-3 mb-5">
+    <!--H1 con crear cupon, activar/desactivar programa lealtad-->
+    <div class="d-flex justify-content-center align-items-center mb-3 mt-4 flex-wrap">
+      <h1 class="text-center pt-3">Cupones disponibles</h1>
+    </div>
+    <!--Listado de cupones-->
+    <div class="row d-flex text-center justify-content-center">
+      <div th:each="cupon : ${cupones}" class="card text-center m-3" style="width: 14rem;">
+        <div class="card-body">
+          <h5 class="card-title text-center"><span th:text="${cupon.porcentajeDescuento}"></span>% de<br>descuento<br>
+          </h5>
+          <p class="card-text">Fecha de vencimiento: <span
+              th:text="${#dates.format(cupon.fechaVencimiento, 'dd-MM-yyyy')}"></span></p>
+          <a class="btn btn-primary" th:href="@{/Cliente/agregandoCupon/}+ ${cupon.idCupon}">Canjear</a>
+        </div>
+      </div>
+    </div>
+    <div class="py-3"></div>
+    <div th:replace="~{homeCliente::menuInferior}"></div>
+    <footer th:replace="~{index:: footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/formValidacionCupones.js}"></script>
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script> 
+</body>
+</html>

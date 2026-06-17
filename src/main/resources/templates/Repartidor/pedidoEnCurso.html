@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <head th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  </head>
+</head>
+
+<body class="bg-light">
+  <!-- Navbar -->
+  <header th:fragment="navbar">
+    <nav class="navbar navbar-light bg-white shadow-sm mb-4">
+      <div class="container-fluid">
+        <a class="btn btn-outline-secondary" th:href="@{/repartidor}">
+          <i class="bi bi-arrow-left"></i> Pedidos
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="container mt-3 mb-5">
+    <!--Herencia de las  Alertas -->
+    <div th:replace="~{alertas::alertas}"></div>
+    <div class="bg-white shadow rounded p-4">
+      <!-- Dirección -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-geo-alt"></i> Dirección
+          </h5>
+          <p th:text="${asignacion.pedido.ubicacion.direccion}"></p>
+          <p th:text="'Casa: ' + ${asignacion.pedido.ubicacion.numeroCasa}"></p>
+          <p th:text="'Referencia: ' + ${asignacion.pedido.ubicacion.referencia}"></p>
+        </div>
+      </div>
+
+      <!-- Cliente -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title"
+            th:text="${asignacion.pedido.cliente.nombreCliente} + ' ' + ${asignacion.pedido.cliente.apellidoCliente}">
+          </h5>
+          <p class="card-text">
+            <i class="bi bi-telephone"></i>
+            <span th:text="${asignacion.pedido.cliente.numeroTelefono}"></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Pedido y Total -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Pedido</h5>
+              <p class="card-text" th:text="${asignacion.pedido.descripcionOrden}"></p>
+
+              <div th:each="detallePedido: ${detalles}" class="row mb-2">
+                <!-- Nombre del producto -->
+                <div class="col">
+                  <span th:text="${detallePedido.producto.nombreProducto}"></span>
+                </div>
+
+                <!-- Cantidad -->
+                <div class="col text-end">
+                  <span th:text="${'Cantidad: ' + detallePedido.cantidadDetalle}"></span>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="col text-end">
+                  <span th:text="${'$' + detallePedido.subTotal}"></span>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Total</h5>
+              <p class="card-text" th:text="${asignacion.pedido.totalAPagar} + ' $'"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tiempo estimado y Fecha -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title">Tiempo estimado</h5>
+              <p class="card-text" th:text="${asignacion.pedido.tiempoEstimado}"></p>
+            </div>
+            <div class="col">
+              <h5 class="card-title">Fecha de pedido</h5>
+              <p class="card-text" th:text="${asignacion.pedido.fechaPedido}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="py-4"></div>
+
+  <!-- Botón fijo para confirmar entrega -->
+  <footer th:fragment="footer">
+    <a th:if="${asignacion.estadoOrden.idEstadoOrden !=3}"
+      class="btn btn-primary text-white w-100 position-fixed bottom-0 start-0 py-3"
+      th:href="@{/asignacion/estado/{id} (id=${asignacion.idAsignacion})}">
+      <b>Confirmar entrega</b>
+    </a>
+    <a th:if="${asignacion.estadoOrden.idEstadoOrden ==3}"
+      class="btn btn-secondary text-white w-100 position-fixed bottom-0 start-0 py-3">
+      <b>Pedido entregado</b>
+    </a>
+  </footer>
+
+</body>
+
+</html>

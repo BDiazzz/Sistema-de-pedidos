@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <!-- Herencia del navbar -->
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container py-4">
+         <!--Herencia de las  Alertas -->
+         <div th:replace="~{alertas::alertas}"></div>
+         
+        <div class="d-flex justify-content-between align-items-center mb-3 ">
+            <h3 class="text-start">Listado de productos:</h3>
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">Agregar
+                producto</a>
+        </div>
+
+        <div th:each="menu, stat : ${listadoMenu}">
+            <div class="card mb-3 shadow border-1">
+                <div class="card-body d-flex align-items-center">
+                    <!-- Imagen -->
+                    <div class="col-auto">
+                        <img th:src="${menu.producto.enlaceImagen}" alt="Imagen del producto" class="img-fluid rounded"
+                            style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                    <!-- Nombre y descripción -->
+                    <div class="col flex-grow-1 px-3">
+                        <h5 class="fw-bold mb-1" th:text="${menu.producto.nombreProducto}"></h5>
+                        <p class="text-muted mb-0" th:text="${menu.producto.descripcionProducto}"></p>
+                    </div>
+                    <!-- Fecha -->
+                    <div class="col flex-grow-1 px-3">
+                        <h5 class="fw-bold mb-1" th:text="${'Fecha'}"></h5>
+                        <p class="text-muted mb-0" th:text="${menu.fechaCreacion}"></p>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="col-auto d-flex gap-2">
+                        <!-- boton de editar -->
+                        <a class="btn btn-primary btn-sm editar-btn" data-bs-toggle="modal" data-bs-target="#actualizarMenuModal"
+                            data-bs-placement="top" title="Editar" data-bs-t="tooltip" th:data-id="${menu.idMenu}"
+                            th:data-fecha="${menu.fechaCreacion}" th:data-producto="${menu.producto.idProducto}">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <!-- boton de eliminar -->
+                        <a th:href="@{/Menu/deleteMenu/}+ ${menu.idMenu}" class="btn btn-danger btn-sm delete-btn"
+                            data-bs-toggle="modal">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de agregar Producto al menu-->
+    <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirAgregarModalLabel">Agregar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Formulario de agregar nuevo producto -->
+                <form th:object="${menu}" class="needs-validation" id="formProducto" novalidate
+                    th:action="@{/Menu/guardarMenu}" th:method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="tipoFalta" class="form-label">Seleccione el producto</label>
+                            <select th:field="*{producto}" class="form-select border-secondary border-opacity-50"
+                                required>
+                                <option value="" selected>Seleccionar producto</option>
+                                <option th:each="producto : ${listadoProducto}" th:value="${producto.idProducto}"
+                                    th:text="${producto.nombreProducto}"></option>
+                            </select>
+                            <div class="invalid-feedback">Es necesario seleccionar el tipo de producto</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="accionCorrectiva" class="form-label">Ingresar fecha</label>
+                            <input type="date" class="form-control border-secondary border-opacity-50"
+                                th:field="*{fechaCreacion}" required />
+                            <div class="invalid-feedback">Es necesario que complete este campo</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="cancelarProducto">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de editar Producto al menu-->
+    <div class="modal fade" id="actualizarMenuModal" tabindex="-1" aria-labelledby="confirmActualizarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmActualizarModalLabel">Editar fecha de muestra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Formulario de agregar nuevo producto -->
+                <form th:object="${menu}" class="needs-validation" id="formMenu" novalidate
+                    th:action="@{/Menu/actualizar}" th:method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="idMenu" name="idMenu" th:field="*{idMenu}" >
+                        <input type="hidden" id="editProduct" name="producto" th:field="*{producto}" >
+                        <!-- <div class="mb-3">
+                            <label for="tipoFalta" class="form-label">Seleccione el producto</label>
+                            <select th:field="*{producto}" class="form-select border-secondary border-opacity-50"
+                             id="editProduct"   required>
+                                <option value="" selected>Seleccionar producto</option>
+                                <option th:each="producto : ${listadoProducto}" th:value="${producto.idProducto}"
+                                    th:text="${producto.nombreProducto}"></option>
+                            </select>
+                            <div class="invalid-feedback">Es necesario seleccionar el tipo de producto</div>
+                        </div> -->
+                        <div class="mb-3">
+                            <label for="accionCorrectiva" class="form-label">Ingresar fecha</label>
+                            <input type="date" class="form-control border-secondary border-opacity-50"
+                                id="editFecha" th:field="*{fechaCreacion}" required />
+                            <div class="invalid-feedback">Es necesario que complete este campo</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="cancelarMenu">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de eliminar -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/gestionMenu.js}"></script>
+    <!-- Js para validar formulario recordando que debe de agregar la clase "needs-validation" al form 
+         y también el atributo "novalidate" y debajo de cada input que quiere validar ponen <div class="invalid-feedback">aca ponen el mensaje que quieren que se muestre</div> 
+         para mayor referencia vean el formulario de agregar productos que está arriba linea 87-->
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+         title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+
+</body>
+
+</html>

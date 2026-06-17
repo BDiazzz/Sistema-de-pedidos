@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperación de Contraseña</title>
+</head>
+
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f2f2f2;">
+    <table class="mt-3" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f2f2f2; padding: 20px 0;">
+        <tr>
+            <td class="justify-content-center" align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #3D85AF; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 20px; text-align: center; color: #ffffff;">
+                            <h1 style="margin: 0; font-size: 24px;" th:text="${titulo == null ? 'Titulo del correo' : titulo}">Recuperación de Contraseña</h1>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 20px; background-color: #ffffff; color: #333333;">
+                            <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                                Hola <strong th:text="${nombre == null ? 'Correo del Usuario' : nombre }">[Nombre del Usuario]</strong>, somos los administradores de EconoMetrics
+                            </p>
+                            <p th:text="${descripcion == null ? 'Esta es mi descripción' : descripcion}" style="font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                                Has solicitado recuperar tu contraseña. Tu nueva contraseña es la siguiente:
+                            </p>
+                            <div style="text-align: center; margin: 20px 0;">
+                                <span style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #ffffff; background-color: #3D85AF; border-radius: 5px;">
+                                    <strong th:text="${contrasena == null ? 'Nueva Contraseña' : contrasena}">[Nueva Contraseña]</strong>
+                                </span>
+                            </div>
+                            <p style="font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                                Por favor, almacena tu contraseña en un lugar seguro, por favor no compartir con otros usarios.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 20px; text-align: center; color: #ffffff;">
+                            <p style="margin: 0; font-size: 14px;" th:text="${consideracion == null ? 'No hay consideraciones' : consideracion}">
+                                Si no solicitaste este cambio, por favor ignora este mensaje o contacta con nuestro soporte.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

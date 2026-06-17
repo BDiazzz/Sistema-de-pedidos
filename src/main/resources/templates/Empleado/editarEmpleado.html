@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container mt-5">
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="card p-4 shadow-sm">
+            <h1 class="mb-4">Editar Empleado</h1>
+
+            <!-- Formulario mejorado con Bootstrap -->
+            <form th:action="@{/empleados/editar}" th:object="${empleado}" class="needs-validation" novalidate
+                method="post">
+                <input type="hidden" th:field="*{idEmpleado}" />
+                <input type="hidden" th:field="*{usuario}" />
+
+                <div class="mb-3">
+                    <label for="nombreEmpleado" class="form-label">Nombre:</label>
+                    <input type="text" th:field="*{nombreEmpleado}" id="nombreEmpleado" class="form-control" required />
+                    <div class="invalid-feedback">Es necesario ingresar el nombre</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="apellidoEmpleado" class="form-label">Apellido:</label>
+                    <input type="text" th:field="*{apellidoEmpleado}" id="apellidoEmpleado" class="form-control"
+                        required />
+                    <div class="invalid-feedback">Es necesario ingresar el apellido</div>
+                </div>
+                <div class="mb-3">
+                    <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                    <input type="date" th:field="*{fechaNacimiento}" id="fechaNacimiento" class="form-control"
+                        required />
+                    <div class="invalid-feedback" id="fechaNacimientoError">
+                        Es necesario seleccionar una fecha válida y ser mayor de 18 años.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="generoEmpleado" class="form-label">Género:</label>
+                    <select th:field="*{generoEmpleado}" id="generoEmpleado" class="form-select" required>
+                        <option value="" selected>Seleccione</option>
+                        <option value="M" th:selected="${empleado.generoEmpleado == 'M'}">M
+                        </option>
+                        <option value="F" th:selected="${empleado.generoEmpleado == 'F'}">F
+                        </option>
+                    </select>
+                    <div class="invalid-feedback">Es necesario seleccionar el genero</div>
+                </div>
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo:</label>
+                    <input type="email" th:field="*{usuario.correoUsuario}" id="correo" class="form-control" required />
+                    <div class="invalid-feedback">Es necesario ingresar el correo</div>
+                </div>
+                <div class="mb-3">
+                    <label for="contraseniaUsuario" class="form-label">Contraseña:</label>
+                    <input type="hidden" th:field="*{usuario.contraseniaUsuario}" id="contraseniaUsuario" class="form-control" required />
+                    <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
+                </div>               
+                <div class="mb-3">
+                    <label for="duiEmpleado" class="form-label">DUI:</label>
+                    <input type="text" th:field="*{duiEmpleado}" id="duiEmpleado" class="form-control" required
+                        minlength="10" maxlength="10" placeholder="00000000-0" />
+                    <div class="invalid-feedback">El DUI debe tener el formato correcto (00000000-0).</div>
+                </div>
+                <div class="mb-3">
+                    <label for="rol" class="form-label">Cargo:</label>
+                    <select name="roles" class="form-select border-secondary border-opacity-75" id="rol" required>
+                        <option value="" selected>Seleccione</option>
+                        <option th:each="rol : ${listadoRol}" th:value="${rol.idRol}" th:text="${rol.rolName}"></option>
+                        <div class="invalid-feedback">Es necesario seleccionar el cargo</div>
+                    </select>
+                </div>
+
+                <!-- Contenedor para centrar los botones -->
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary me-3" data-bs-t="tooltip" data-bs-placement="top"
+                        title="Guardar Empleado">Guardar</button>
+                    <a th:href="@{/empleados}" class="btn btn-secondary" data-bs-t="tooltip" data-bs-placement="top"
+                        title="Cancelar Crear Empleado">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <script>
+        $('#duiEmpleado').mask('00000000-0');   
+    </script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script type="text/javascript" th:src="@{/js/validacionEmpleado.js}"></script>
+    <!-- <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script> -->
+</body>
+
+</html>

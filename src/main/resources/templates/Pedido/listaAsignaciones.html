@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{index::head}">
+    <title>Listado de Asignaciones</title>
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <!-- Dentro de este contianer van a trabajar -->
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lista de Asignaciones</h1>
+            <!--<a th:href="@{/Pedidos/crearAsignacion}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Agregar Pedido
+            </a>-->
+        </div>
+
+        <div class="row">
+            <!-- Filtros -->
+            <!--<div class="col-md-4">
+                <div class="card p-4 shadow-sm">
+                    <h5 class="card-title mb-3">Filtrar Asignaciones</h5>
+                    <form th:action="@{/Pedidos/filtrarAsignaciones}" method="get">
+                        <div class="mb-3">
+                            <label for="ID" class="form-label">Estado</label>
+                            <select class="form-select" id="Estado">
+                                <option selected>Seleccione</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Completado">Completado</option>
+                                <option value="En Ruta">En Ruta</option>
+                                <option value="Entregado">Entegado</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary">Filtrar</button>
+                    </form>
+                </div>
+            </div>-->
+
+            <!-- Tabla -->
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nº</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Fecha de Pedido</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Repartidor</th>
+                            <th scope="col">Total</th>
+                            <th class="text-center" scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="asignacion, stat : ${listadoAsignaciones}">
+                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <td th:text="${asignacion.pedido != null && asignacion.pedido.cliente != null ? 
+                                asignacion.pedido.cliente.nombreCliente + ' ' + asignacion.pedido.cliente.apellidoCliente : 
+                                'Sin cliente asignado'}"></td>
+                            <td
+                                th:text="${asignacion.pedido != null && asignacion.pedido.fechaPedido != null ? #dates.format(asignacion.pedido.fechaPedido, 'dd/MM/yyyy') : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.EstadoOrden != null && asignacion.EstadoOrden.tipoEstado != null ? 
+                                    asignacion.EstadoOrden.tipoEstado : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.repartidor != null && asignacion.repartidor.nombreRepartidor != null ? 
+                                    asignacion.repartidor.nombreRepartidor : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.pedido != null && asignacion.pedido.totalAPagar != null ? 
+                                    asignacion.pedido.totalAPagar : 'No asignado'}">
+                            </td>
+                            <td class="text-center">
+                                <!-- Botón para Ver -->
+                                <a class="btn btn-success ver-btn" data-bs-t="tooltip" data-bs-placement="top"
+                                    title="Ver" th:href="@{/Pedidos/consultar/} + ${asignacion.idAsignacion}">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+
+                                <!-- Botón para Editar -->
+                                <a class="btn btn-primary editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
+                                    data-bs-target="#seleccionarRepartidorModal" data-bs-placement="top"
+                                    title="Editar Repartidor" th:data-idasignacion="${asignacion.idAsignacion}"
+                                    th:data-fecha="${asignacion.fechaAsignacion}"
+                                    th:data-pedido="${asignacion.pedido.idPedido}"
+                                    th:data-repartidor="${asignacion.repartidor != null ? asignacion.repartidor.idRepartidor : 'No Asignado'}"
+                                    th:data-estado="${asignacion.EstadoOrden != null ? asignacion.EstadoOrden.idEstadoOrden : 'INICIADO'}"
+                                    th:classappend="${asignacion.EstadoOrden.idEstadoOrden == 2 ? '' : 'disabled'}"
+                                    th:href="${asignacion.EstadoOrden.idEstadoOrden == 2 ? '#' : 'javascript:void(0)'}">
+
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal para Seleccionar Repartidor -->
+        <div class="modal fade" id="seleccionarRepartidorModal" tabindex="-1"
+            aria-labelledby="seleccionarRepartidorLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Seleccionar Repartidor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/Pedidos/asignacion/actualizarRepartidor}" th:object="${asignacion}"
+                        class="needs-validation" method="post" novalidete>
+                        <div class="modal-body">
+                            <input type="hidden" id="editIdasignacion" th:field="*{idAsignacion}" />
+                            <input type="hidden" id="editFecha" th:field="*{fechaAsignacion}" />
+                            <input type="hidden" id="editPedido" th:field="*{pedido}" />
+                            <input type="hidden" id="editEstado" th:field="*{EstadoOrden}" />
+                            <!-- Select para seleccionar repartidor -->
+                            <div class="mb-3">
+                                <label for="selectRepartidor" class="form-label">Repartidor</label>
+                                <select  class="form-select" th:field="*{repartidor}" required>
+                                    <option th:if="${!listadoRepartidores.isEmpty()}" value="" selected>Seleccionar</option>
+                                    <option th:if="${listadoRepartidores.isEmpty()}" value="" selected>No hay repatidores para asignar</option>
+                                    <!--Aquí se cargarán los repartidores disponibles -->
+                                    <option th:each="repartidor : ${listadoRepartidores}"
+                                        th:if="${repartidor.estado == true}" th:value="${repartidor.idRepartidor}"
+                                        th:text="${repartidor.nombreRepartidor + ' ' + repartidor.apellidoRepartidor}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary" id="guardarRepartidor">Guardar
+                                selección</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <!-- <script type="text/javascript" th:src="@{/js/verDetallePedido.js}"></script> -->
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script type="text/javascript" th:src="@{/js/gestionAsignaciones.js}"></script>
+</body>
+
+
+</html>

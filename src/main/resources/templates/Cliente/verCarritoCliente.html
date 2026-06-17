@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+
+    <div class="container mt-3 mb-5">
+        <div th:replace="~{alertas::alertas}"></div>
+
+        <!-- Mensaje de carrito vacío -->
+        <div th:if="${carrito.detalles.isEmpty()}" class="text-center py-5">
+            <div>
+                <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <p class="mt-3 fs-5 text-muted">¡Tu carrito está vacío! Parece que aún no has agregado productos.</p>
+            <a th:href="@{/Cliente/RealizarPedido}" class="btn btn-primary mt-2">Realizar Pedido</a>
+        </div>
+
+
+        <!-- Detalles del carrito -->
+        <div class="row gy-3">
+            <div th:each="detalle : ${carrito.detalles.values()}" class="col-12">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                        <!-- Imagen del producto -->
+                        <div class="col-3 d-flex align-items-center">
+                            <img th:src="${detalle.producto.enlaceImagen}" alt="Imagen del producto"
+                                class="img-fluid rounded">
+                        </div>
+                        <!-- Información del producto -->
+                        <div class="col-6">
+                            <div class="card-body p-2">
+                                <h5 class="card-title mb-2 fw-bold" th:text="${detalle.producto.nombreProducto}">
+                                    Nombre</h5>
+                                <p class="small text-muted mb-0 description1"
+                                    th:text="${detalle.producto.descripcionProducto}">Descripción</p>
+                                <span class="text-decoration-underline read-more">Leer más</span>
+                                <span class="text-decoration-underline read-less d-none">Leer menos</span>
+                            </div>
+                        </div>
+                        <!-- Controles y precio -->
+                        <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+                            <p class="fw-bold text-dark mb-1">$
+                                <span th:text="${#numbers.formatDecimal(detalle.subTotal, 1, 2)}"></span>
+                            </p>
+                            <div class="input-group input-group-sm">
+                                <button class="btn btn-outline-danger decrease-quantity" type="button"
+                                    th:id="'decrease-' + ${detalle.producto.idProducto}">
+                                    <div th:if="${detalle.cantidadDetalle==1}"><i class="bi bi-trash"></i></div>
+                                    <div th:if="${detalle.cantidadDetalle!=1}">-</div>
+                                </button>
+                                <input type="text" class="form-control text-center"
+                                    th:value="${detalle.cantidadDetalle}"
+                                    th:id="'quantityInput-' + ${detalle.producto.idProducto}">
+                                <button class="btn btn-outline-success increase-quantity" type="button"
+                                    th:id="'increase-' + ${detalle.producto.idProducto}">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen del carrito -->
+        <div th:if="${!carrito.detalles.isEmpty()}" class="col-12 mt-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-3"><strong>Resumen</strong></h3>
+                    <p>Total:
+                        <span class="fw-bold" th:text="${'$' + #numbers.formatDecimal(carrito.calcularTotal(), 1, 2)}">
+                            $0.00
+                        </span>
+                    </p>
+                    <a class="btn btn-primary w-100" th:href="@{/Cliente/ConfirmarPedido}">Finalizar Pedido</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Espaciado final -->
+    <div class="py-3"></div>
+    <div th:replace="~{homeCliente::menuInferior}"></div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script type="text/javascript" th:src="@{/js/getionCarrito.js}"></script>
+</body>
+
+</html>

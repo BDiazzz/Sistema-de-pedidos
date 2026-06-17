@@ -1,0 +1,21 @@
+{
+    "name": "Gestión de Pedidos a Domicilio para Restaurantes locales",
+    "short_name": "gpdrl",
+    "start_url": "/login",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2196f3",
+    "icons": [
+      {
+        "src": "/image/logo_general.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/image/logo_general.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ]
+  }
+  

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <header th:replace="~{homeCliente::menuSuperior}"></header>
+
+    <div class="container mt-4">
+        <h2>Tu Carrito</h2>
+        <div th:if="${carrito.detalles.isEmpty()}">
+            <p>Tu carrito está vacío.</p>
+        </div>
+        <div th:each="detalle : ${carrito.detalles.values()}">
+            <p>
+                <span th:text="${detalle.producto.nombreProducto}"></span> -
+                Cantidad: <span th:text="${detalle.cantidadDetalle}"></span> -
+                Subtotal: <span th:text="${'$' + detalle.subTotal}"></span>
+            </p>
+        </div>
+        <p>Total: <span th:text="${'$' + carrito.calcularTotal()}"></span></p>
+        <a class="btn btn-primary" th:href="@{/Cliente/finalizarPedido}">Finalizar Pedido</a>
+    </div>
+    
+
+    <div th:replace="~{homeCliente::menuInferior}"></div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/gestionPedidoCliente.js}"></script>
+
+
+</body>
+
+</html>

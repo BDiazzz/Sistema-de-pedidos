@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container">
+        <!-- Herencia de las Alertas -->
+        <div th:replace="~{alertas::alertas}"></div>
+        <!-- Jumbotron -->
+        <div class="jumbotron mb-3 bg-light rounded-3">
+            <div class="container py-4 text-center">
+                <h1 class="display-5 fw-bold">Bienvenido, seleccione una opción</h1>
+                <p class="col-md-12 fs-5">Accede a las herramientas necesarias para poder gestionar el menu del día y
+                    los productos del restaurante.
+                </p>
+            </div>
+        </div>
+        <div class="row mb-3 justify-content-center g-3">
+
+            <!-- Gestión de Menú del Día -->
+            <div class="col-12 col-md-6 mb-4 text-center py-2">
+                <a class="btn btn-outline-dark d-flex flex-column align-items-center py-4 shadow-lg rounded py-4"
+                    th:href="@{ExpedienteAlumno/Crear}">
+                    <span class="fs-5 mb-2">Menú del Día</span>
+                    <i class="bi bi-egg-fried fs-1"></i>
+                </a>
+            </div>
+
+            <!-- Gestión de Productos -->
+            <div class="col-12 col-md-6 mb-4 text-center py-2">
+                <a class="btn btn-outline-dark d-flex flex-column align-items-center py-4 shadow-lg rounded py-4"
+                    th:href="@{/Productos}">
+                    <span class="fs-5 mb-2">Gestión de Productos</span>
+                    <i class="bi bi-basket fs-1"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <!-- JS para validación de formulario -->
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <!-- JS para hacer funcionar modal de eliminación -->
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <!-- JS para tooltips -->
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+
+</html>

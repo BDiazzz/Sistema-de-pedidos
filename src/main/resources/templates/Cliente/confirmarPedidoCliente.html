@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+    <div class="container mt-3 my-5">
+        <div th:replace="~{alertas::alertas}"></div>
+        
+
+        <form th:action="@{/Cliente/finalizarPedido}" method="post">
+            <!-- Sección de Pago -->
+            <section class="mb-5">
+                <h2 class="fw-semibold mb-4 text-center">¿Cómo quieres pagar?</h2>
+                <div class="row gy-4 justify-content-center">
+                    <!-- Efectivo -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card shadow-sm text-center">
+                            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                <i class="bi bi-cash-coin fs-1 text-success"></i>
+                                <h5 class="card-title mt-3">Efectivo</h5>
+                                <input class="form-check-input mt-3" type="radio" name="MetodoPago" id="efectivo"
+                                    value=EFECTIVO required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tarjeta -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card shadow-sm text-center">
+                            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                <i class="bi bi-credit-card fs-1 text-primary"></i>
+                                <h5 class="card-title mt-3">Tarjeta de crédito/débito</h5>
+                                <input class="form-check-input mt-3" type="radio" name="MetodoPago" id="tarjeta"
+                                    value=TARJETA required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Cupones -->
+            <section class="mb-5">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-ticket fs-3 text-warning me-3"></i>
+                    <label class="me-auto">Aplica un cupón</label>
+                    <span th:if="${carrito.puntos != null }" class="me-3" >Ya selecciono puntos</span>
+                    <div th:if="${carrito.puntos==null}">
+                        <a th:if="${carrito.cupon == null}" th:href="@{/Cliente/canjearCupon}"
+                        class="text-decoration-underline text-secondary">Ir a cupones</a>
+                    <a th:if="${carrito.cupon != null}" th:href="@{/Cliente/canjearCupon}"
+                        class="text-decoration-underline text-success fw-bold"
+                        th:text="${'Aplicando '+ carrito.cupon.porcentajeDescuento+'%'}"></a>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Sección de Puntos -->
+            <section class="mb-5">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-coin fs-3 text-warning me-3"></i>
+                    <label class="me-auto">Usar puntos</label>
+                    <span th:if="${carrito.cupon != null }" class="me-3" >Ya selecciono un cupon</span>
+                    <!-- <input th:if="${cantidadPuntos > 0}" type="checkbox" name="puntos" class="form-check-input"> -->
+                     <div th:if="${carrito.cupon == null}">
+                        <a th:if="${carrito.puntos==null}" href="#" class="text-decoration-underline text-secondary" data-bs-toggle="modal"
+                        data-bs-target="#cambiarPuntosModal">Seleccionar</a>
+                    <a th:if="${carrito.puntos != null}" data-bs-target="#cambiarPuntosModal" href="#" data-bs-toggle="modal"
+                        class="text-decoration-underline text-success fw-bold"
+                        th:text="${'Aplicando: '+ carrito.puntos.cantidadPuntos}"></a>
+                     </div>
+                    
+                </div>
+            </section>
+
+            <!-- Datos de Entrega -->
+            <section class="mb-5">
+                <h2 class="fw-semibold mb-4">Datos de Entrega</h2>
+                <p><i class="bi bi-truck text-success"></i> <strong>Delivery:</strong> <span id="delivery-time">45-60
+                        minutos</span></p>
+                <p>
+                    <i class="bi bi-geo-alt text-danger"></i> <strong>Lo recibes en:</strong>
+                    <span id="delivery-address" th:text="${ubicacion.direccion + ' ' + ubicacion.numeroCasa}">Dirección
+                        actual</span>
+                    <a href="#" class="text-primary ms-3" data-bs-toggle="modal"
+                        data-bs-target="#cambiarModal">Cambiar</a>
+                </p>
+                <p>
+                    <i class="bi bi-house-add text-info"></i> <strong>Instrucciones de entrega:</strong>
+                    <span id="delivery-instructions" th:text="${ubicacion.referencia}">Referencia</span>
+                </p>
+            </section>
+
+            <!-- Resumen -->
+            <section class="mb-5">
+                <h2 class="fw-semibold">Resumen del Pedido</h2>
+                <p class="mt-3"><strong>Total:</strong> <span id="total-cost"
+                        th:text="${'$' + #numbers.formatDecimal(carrito.calcularTotal(), 1, 2)}"></span></p>
+            </section>
+
+            <!-- Botón de Pedido -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5">Finalizar Pedido</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal de direccion-->
+    <div class="modal fade" id="cambiarModal" tabindex="-1" aria-labelledby="cambiarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cambiarModalLabel">Cambiar Dirección de Entrega</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/Cliente/Ubicacion/cambiarUbicacion} " method="post">
+                        <div th:each="ubicacion : ${listadoUbicaciones}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="ubicacionActiva" th:value="true"
+                                    th:id="'ubicacion_' + ${ubicacion.idUbicacion}"
+                                    th:checked="${ubicacion.ubicacionActiva}"
+                                    th:data-idUbicacion="${ubicacion.idUbicacion}">
+                                <label class="form-check-label" th:for="'ubicacion_' + ${ubicacion.idUbicacion}">
+                                    <span th:text="${ubicacion.direccion}"></span>
+                                    <span th:text="${ubicacion.numeroCasa}"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="idUbicacion" id="idUbicacion">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Puntos -->
+    <div class="modal fade" id="cambiarPuntosModal" tabindex="-1" aria-labelledby="cambiarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="cambiarModalLabel">Seleccionar cantidad de puntos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Puntos disponibles -->
+                    <div class="mb-3 text-center">
+                        <span class="fw-bold text-secondary"
+                            th:text="'Puntos disponibles: ' + ${cantidadPuntos}"></span>
+                    </div>
+
+                    <form th:action="@{/Cliente/confirmarCupones}" method="post">
+                        <!-- Opciones dinámicas -->
+                        <div th:if="${cantidadPuntos > 5000 && (carrito.calcularTotal()/2)> (5000/100)}" class="card mb-3  shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos5000" required
+                                    value="5000" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos5000" class="form-check-label">
+                                        <strong class="d-block">$50</strong>
+                                        <span class="text-muted">5,000 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${cantidadPuntos > 2000 && (carrito.calcularTotal()/2)> (2000/100)}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos2000" required
+                                    value="2000" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos2000" class="form-check-label">
+                                        <strong class="d-block">$20</strong>
+                                        <span class="text-muted">2,000 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${cantidadPuntos > 1000 && (carrito.calcularTotal()/2)> (1000/100)}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos1000" required
+                                    value="1000" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos1000" class="form-check-label">
+                                        <strong class="d-block">$10</strong>
+                                        <span class="text-muted">1,000 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${cantidadPuntos > 500 && (carrito.calcularTotal()/2)> (500/100)}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos500" required
+                                    value="500" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos500" class="form-check-label">
+                                        <strong class="d-block">$5</strong>
+                                        <span class="text-muted">500 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${cantidadPuntos > 300 && (carrito.calcularTotal()/2)> (300/100)}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos300" required
+                                    value="300" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos300" class="form-check-label">
+                                        <strong class="d-block">$3</strong>
+                                        <span class="text-muted">300 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${cantidadPuntos > 100 && (carrito.calcularTotal()/2)> (100/100)}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <input class="form-check-input me-3" type="radio" name="puntos" id="puntos100" required
+                                    value="100" style="transform: scale(1.2);">
+                                <div>
+                                    <label for="puntos100" class="form-check-label">
+                                        <strong class="d-block">$1</strong>
+                                        <span class="text-muted">100 puntos</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="modal-footer mt-3">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/formValidacion.js}"></script>
+    <script th:src="@{/js/modalEliminacion.js}"></script>
+    <script th:src="@{/js/tooltips.js}"></script>
+    <script>
+        // Al seleccionar una ubicación, actualizar el campo oculto con el id de la ubicación seleccionada
+        document.querySelectorAll('.form-check-input').forEach((radioButton) => {
+            radioButton.addEventListener('change', function () {
+                const idUbicacion = this.getAttribute('data-idUbicacion');
+                document.getElementById('idUbicacion').value = idUbicacion;
+            });
+        });
+    </script>
+</body>
+
+</html>

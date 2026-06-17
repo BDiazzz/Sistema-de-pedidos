@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <!-- Dentro de este contianer van a trabajar -->
+    <div class="container mt-4">
+        <!--Herencia de las  Alertas -->
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Despacho de Pedidos</h1>
+        </div>
+
+        <div class="row">
+            <!-- Tabla -->
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nº</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Fecha de Pedido</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Repartidor</th>
+                            <th scope="col">Total</th>
+                            <th class="text-center" scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="asignacion, stat : ${listadoAsignaciones}">
+                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <td th:text="${asignacion.pedido.cliente.nombreCliente + ' ' + asignacion.pedido.cliente.apellidoCliente}"></td>
+                            <td
+                                th:text="${asignacion.pedido != null && asignacion.pedido.fechaPedido != null ? #dates.format(asignacion.pedido.fechaPedido, 'dd/MM/yyyy') : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.EstadoOrden != null && asignacion.EstadoOrden.tipoEstado != null ? 
+                                asignacion.EstadoOrden.tipoEstado : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.repartidor != null && asignacion.repartidor.nombreRepartidor != null ? 
+                                asignacion.repartidor.nombreRepartidor : 'No asignado'}">
+                            </td>
+                            <td th:text="${asignacion.pedido.totalAPagar}"></td>
+                            <td class="text-center">
+                                <!-- Botón para Ver  -->
+                                <a class="btn btn-success ver-btn" data-bs-t="tooltip" data-bs-placement="top"
+                                    title="Ver" th:href="@{/Pedidos/consultar/} + ${asignacion.idAsignacion}">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+
+                                <!-- Botón para Editar -->
+                                <a class="btn btn-primary editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
+                                    data-bs-target="#productoModal" data-bs-placement="top" title="Editar"
+                                    th:data-id-asignacion="${asignacion.idAsignacion}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal para marcar como completado -->
+        <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!--Encabezado del modal-->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productoModalLabel">Marcar Producto como Completado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/Pedidos/guardarlistaPedidosDespacho}" method="post">
+                        <div class="modal-body">
+                            <p>¿Está seguro de que desea marcar este producto como completado?</p>
+                            <input type="hidden" id="idAsignacionInput" name="idAsignacion">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Pedido Completado</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script type="text/javascript" th:src="@{/js/idAsignacion.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <!-- Dentro de este contianer van a trabajar -->
+    <div class="container">
+         <!--Herencia de las  Alertas -->
+         <div th:replace="~{alertas::alertas}"></div>
+
+        <h1>Ejemplo</h1>
+
+
+
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+   
+    <!-- Js para validar formulario recordando que debe de agregar la clase "needs-validation" al form 
+     y también el atributo "novalidate" y debajo de cada input que quiere validar ponen <div class="invalid-feedback">aca ponen el mensaje que quieren que se muestre</div> 
+     para mayor referencia vean el formulario de agregar productos que está arriba linea 87 plantilla Productos.html-->
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+     title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+
+</body>
+
+</html>

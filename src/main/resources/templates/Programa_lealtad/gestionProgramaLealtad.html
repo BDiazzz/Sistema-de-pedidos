@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index:: head}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${titulo}">GestionPr.Lealtad</title>
+</head>
+
+<body>
+  <header th:replace="~{index:: navbar}">
+  </header>
+
+  <div class="container py-2">
+    <!-- Alertas -->
+    <div th:replace="~{alertas::alertas}"></div>
+    <!--H1 con crear cupon, activar/desactivar programa lealtad-->
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4 flex-wrap">
+      <h1 class="text-center pt-3">Gestión Programa de Lealtad</h1>
+      <div>
+        <div>
+          <button class="btn btn-primary ms-auto mt-3" data-bs-toggle="modal" data-bs-target="#ModalCrearCupon"
+          data-bs-whatever="@mdo"><i class="bi bi-plus-lg"></i> Crear cupon</button>
+          <button th:if="${banderaPuntos == false}" class="btn btn-success ms-auto mt-3" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#ModalDesactivarActivar"
+                  data-tipo-entidad="puntos"
+                  data-accion="activar">
+              Activar puntos
+          </button>
+          <button th:if="${banderaPuntos == true}" class="btn btn-danger ms-auto mt-3" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#ModalDesactivarActivar"
+                  data-tipo-entidad="puntos"
+                  data-accion="desactivar">
+              Desactivar puntos
+          </button>
+          <button th:if="${banderaCupones == false}" class="btn btn-success ms-auto mt-3" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#ModalDesactivarActivar"
+                  data-tipo-entidad="cupones"
+                  data-accion="activar">
+              Activar cupones
+          </button>
+          <button th:if="${banderaCupones == true}" class="btn btn-danger ms-auto mt-3" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#ModalDesactivarActivar"
+                  data-tipo-entidad="cupones"
+                  data-accion="desactivar">
+              Desactivar cupones
+          </button>
+      </div>
+      
+      </div>
+      <!--Modal para crear un cupon-->
+      <div class="modal fade" id="ModalCrearCupon" tabindex="-1" aria-labelledby="ModalCrearCuponTitulo"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5 text-center" id="ModalCrearCuponTitulo">Ingrese los datos del cupón</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/crearCupon}" class="needs-validation" novalidate th:object="${nuevoCupon}"
+              method="post">
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="porcentajeDescuento" class="col-form-label">Porcentaje de descuento:</label>
+                    <input type="number" th:field="*{porcentajeDescuento}" class="form-control" id="porcentajeDescuento"
+                    name="porcentajeDescuento" min="5" max="70" required>
+                    <div class="invalid-feedback">El descuento debe estar en el rango [5-70]</div>
+                </div>
+                <div class="mb-3">
+                    <label for="fechaExpiracion" class="col-form-label">Fecha de expiración:</label>
+                    <input type="date" th:field="*{fechaVencimiento}" class="form-control" id="fechaExpiracion"
+                    name="fechaExpiracion" required>
+                    <div class="invalid-feedback">La fecha debe ser mayor a la fecha actual</div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <input type="submit" class="btn btn-success" value="Crear" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Modal activar/desactivar puntos o cupones-->
+    <div class="modal fade" id="ModalDesactivarActivar" tabindex="-1" aria-labelledby="ModalDesactivarActivarTitulo" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form action="/activarDesactivar" method="POST">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="ModalDesactivarActivarTitulo">¿Estás seguro que quieres realizar esta acción?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-footer">
+                      <input type="hidden" name="tipoEntidad" id="modal-tipo-entidad">
+                      <input type="hidden" name="accion" id="modal-accion">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Aceptar</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  
+    <!-- Modal de Confirmación de eliminar -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Listado de cupones-->
+    <div class="row d-flex text-center justify-content-center">
+      <div th:each="cupon : ${cupones}" class="card text-center m-3" style="width: 14rem;">
+        <div class="card-body">
+          <h5 class="card-title text-center"><span th:text="${cupon.porcentajeDescuento}"></span>% de<br>descuento<br>
+          </h5>
+          <p class="card-text">Fecha de vencimiento: <span
+              th:text="${#dates.format(cupon.fechaVencimiento, 'dd-MM-yyyy')}"></span></p>
+          <a class="btn btn-danger delete-btn" th:href="@{/deleteCupon/}+ ${cupon.idCupon}" data-bs-toggle="modal"
+            data-bs-target="#ModalEliminarCupon">Eliminar</a>
+        </div>
+      </div>
+    </div>
+    <footer th:replace="~{index:: footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/formValidacionCupones.js}"></script>
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+    <script>
+      const modalDesactivarActivar = document.getElementById('ModalDesactivarActivar');
+      modalDesactivarActivar.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget; // Botón que activó el modal
+          const tipoEntidad = button.getAttribute('data-tipo-entidad');
+          const accion = button.getAttribute('data-accion');
+  
+          // Configurar los inputs ocultos
+          document.getElementById('modal-tipo-entidad').value = tipoEntidad;
+          document.getElementById('modal-accion').value = accion;
+      });
+  </script>
+  
+</body>
+</html>

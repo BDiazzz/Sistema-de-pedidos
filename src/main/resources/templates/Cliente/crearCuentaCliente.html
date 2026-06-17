@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+  <!-- Dentro de este contianer van a trabajar -->
+  <div class="container">
+    <div th:replace="~{alertas::alertas}"></div>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card mt-5">
+          <div class="card-header text-center">
+            <h3>Crear Cuenta</h3>
+          </div>
+          <div class="card-body">
+            <form id="formRegistro" th:action="@{/Cliente/guardarCliente}" method="post" th:object="${cliente}">
+
+              <!-- Campo Nombre -->
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre"  th:field="*{nombreCliente}" required>
+              </div>
+
+              <!-- Campo Apellido -->
+              <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="apellido"  th:field="*{apellidoCliente}" required>
+              </div>
+
+              <!-- Campo Fecha de Nacimiento -->
+              <div class="mb-3">
+                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimiento"  th:field="*{fechaNacimientoC}" required>
+              </div>
+
+              <!-- Campo Sexo -->
+              <div class="mb-3">
+                <label for="sexo" class="form-label">Sexo</label>
+                <select class="form-control" id="sexo"  th:field="*{generoCliente}" required>
+                  <option value="">Seleccione</option>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" th:field="*{usuario.correoUsuario}"  required>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" th:field="*{usuario.contraseniaUsuario}" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+              </div>
+
+              <div class="text-center mt-3">
+                <p>¿Ya tienes una cuenta?
+                  <a th:href="@{/login}">Inicia sesión aquí</a>
+                </p>
+              </div>
+
+              <!-- Botón de Enviar -->
+              <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer th:replace="~{index::footer}"></footer>
+</body>
+
+</html>

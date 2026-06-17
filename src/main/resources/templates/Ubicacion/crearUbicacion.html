@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirección de Entrega</title>
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container mt-5">
+        <div th:replace="~{alertas::alertas}"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h1>Dirección de Entrega</h1>
+            </div>
+
+            <div class="card-body">
+                <form th:action="@{/Cliente/Ubicacion/Guardar}" th:object="${ubicacion}" class="needs-validation" novalidate method="POST">
+                    <input type="hidden" th:field="*{cliente.idCliente}" />
+                    
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección *</label>
+                        <input type="text" th:field="*{direccion}" class="form-control" id="direccion" placeholder="Ej: Calle San Salvador" required>
+                        <div class="invalid-feedback">Es necesario ingresar la dirección</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="numero-piso" class="form-label">Número de piso / Apartamento / Casa *</label>
+                        <input type="text" th:field="*{numeroCasa}" class="form-control" id="numero-piso" placeholder="Ej: Casa #10" required>
+                        <div class="invalid-feedback">Es necesario ingresar el número de piso / Apartamento / Casa</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="referencias" class="form-label">Referencias / Indicaciones para la entrega *</label>
+                        <input type="text" th:field="*{referencia}" class="form-control" id="referencias" placeholder="Ej: Casa blanca con rejas" maxlength="100" required>
+                        <div class="invalid-feedback">Es necesario ingresar una referencia</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nombre-direccion" class="form-label">¿Qué nombre le damos a esta dirección?</label>
+                        <select class="form-select" th:field="*{tipo}" id="nombre-direccion" required>
+                            <option value="" th:selected="*{tipo == ''}">Selecciona una opción</option>
+                            <option value="Casa" th:selected="*{tipo == 'Casa'}">Casa</option>
+                            <option value="Trabajo" th:selected="*{tipo == 'Trabajo'}">Trabajo</option>
+                            <option value="Otro" th:selected="*{tipo == 'Otro'}">Otro</option>
+                        </select>
+                        <input type="text" class="form-control mt-2 d-none" id="nombre-direccion-otro" placeholder="Especificar si es otro">
+                        <div class="invalid-feedback">Es necesario seleccionar una opción</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ubicacion-activa" class="form-label">¿Dirección activa?</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" th:field="*{ubicacionActiva}" id="ubicacion-activa">
+                            <label class="form-check-label" for="ubicacion-activa">Marcar si esta dirección la quiere activa</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn btn-primary" data-bs-t="tooltip" data-bs-placement="top" title="Guardar Ubicación">Guardar</button>
+                        <a th:href="@{/Cliente/Ubicacion/}" class="btn btn-secondary" data-bs-t="tooltip" data-bs-placement="top" title="Cancelar">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+
+</html>

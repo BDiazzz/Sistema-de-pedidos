@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container mt-5">
+        <div th:replace="~{alertas::alertas}"></div>
+
+        <div class="row mb-4">
+            <div class="col-6">
+                <h1>Lista de Empleados</h1>
+            </div>
+            <div class="col-6 text-end">
+                <a href="/empleados/nuevo" class="btn btn-primary" data-bs-t="tooltip"
+                data-bs-placement="top" title="Agregar Nuevo Empleado">
+                    <i class="bi bi-person-plus"></i> Nuevo Empleado
+                </a>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Género</th>
+                    <th>DUI</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="empleado, iterStat : ${empleados}">
+                    <td th:text="${iterStat.index + 1}">Número</td>
+                    <td th:text="${empleado.nombreEmpleado}">Nombre</td>
+                    <td th:text="${empleado.apellidoEmpleado}">Apellido</td>
+                    <td th:text="${#dates.format(empleado.fechaNacimiento, 'dd/MM/yyyy')}">Fecha de Nacimiento</td>
+                    <td th:text="${empleado.generoEmpleado}">Género</td>
+                    <td th:text="${empleado.duiEmpleado}">DUI</td>
+                    <td>
+                        <a th:href="@{/empleados/consultar/{id}(id=${empleado.idEmpleado})}" 
+                           class="btn btn-success btn-sm" 
+                           data-bs-t="tooltip"
+                    data-bs-placement="top" title="Consultar Empleado">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </a>
+                        <a th:href="@{/empleados/editar/{id}(id=${empleado.idEmpleado})}" 
+                           class="btn btn-primary btn-sm" 
+                           data-bs-t="tooltip"
+                    data-bs-placement="top" title="Editar Empleado">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEliminar" 
+                                th:attr="data-id=${empleado.idEmpleado}" 
+                                data-bs-t="tooltip"
+                    data-bs-placement="top" title="Eliminar Empleado">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar a este empleado?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmarEliminar" href="#" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <footer th:replace="~{index::footer}"></footer>
+
+    <script th:src="@{/js/tooltips.js}"></script>
+    <script th:src="@{/js/modalEliminarEmpleado.js}"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+.custom-navbar {
+    background-color: #502314;
+    /* Reemplaza ##005187 con el color que desees */
+  }
+  
+  /*Reescribo color de encabezado de tablas*/
+  .table thead th {
+    background-color: #e66322;
+    color: white;
+    /* Color del texto del encabezado */
+  }
+
+  .no-resize {
+    resize: none;
+  }
+
+  .bg-naranja {
+    background-color: #e66322;
+    /* Reemplaza ##005187 con el color que desees */
+  }
+
+  .img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 150px;        /* Ajusta esta altura según necesites */
+  }
+
+  .img-container1 {
+    display: flex;
+  }
+  
+  .img-fluid {
+    max-height: 96px; 
+    max-width: 96px;
+  }
+
+  .description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .description1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .description1.expanded {
+    -webkit-line-clamp: unset;
+  }
+    
+  .description.expanded {
+    -webkit-line-clamp: unset;
+  }
+    
+  .read-more,
+  .read-less {
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .add-button {
+    font-size: 0.875rem;      /* Ajustar el tamaño del botón */
+    padding: 0.25rem 0.5rem;      /* Reducir el padding del botón */
+  }
+
+  .add-button i {
+    font-size: 1rem;      /* Ajustar el tamaño del icono */
+  }
+
+  .price-add-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .input-group {
+    max-width: 110px;
+  }
+
+  .card-custom-height {
+    height: 100px;  /* Ajusta esta altura según tus necesidades */
+  }
+
+  .card-custom-bg {
+    background-color: #e2f0fb;      /* Aquí puedes poner tu color personalizado */
+  }
+
+  .coupon-link {
+    margin-left: 118px; /* Ajusta el margen según lo necesario */
+  }
+
+  .espacio {
+    margin-left: 60px; /* Ajusta el margen según lo necesario */
+  }
+
+  .espacio1 {
+    margin-left: 100px; /* Ajusta el margen según lo necesario */
+  }
+ /*Para los puntos*/
+  /* Estilo por defecto (pantallas grandes) */
+  #punto-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .fecha-container, .puntos-container {
+    display: inline-block;
+  }
+  
+  /* Media query para pantallas de 766px o menos */
+  @media (max-width: 766px) {
+    #punto-container {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+  
+    .fecha-container {
+        margin-bottom: 3px; /* Espaciado entre la fecha y los puntos */
+    }
+  
+    .puntos-container {
+        text-align: center; /* Asegura que el texto de puntos esté centrado */
+    }
+  }

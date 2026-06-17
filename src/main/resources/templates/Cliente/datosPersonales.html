@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+  <div th:replace="~{homeCliente::menuSuperiorCarrito}"></div>
+
+  <div class="container py-2">
+    <div class="card p-4">
+      <!--Link pare regresar-->
+      <!-- <a th:href="@{/Cliente/perfil}" class="fs-2 text-decoration-none text-dark"><i
+          class="bi bi-arrow-left-circle"></i></a> -->
+
+      <form th:Object="${cliente}" th:action="@{/Cliente/editarDatos}" method="post" class="needs-validation" novalidate>
+        <input type="hidden" th:field="*{idCliente}">
+        <input type="hidden" th:field="*{usuario}">
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre" th:field="*{nombreCliente}"
+            placeholder="Ingresa tu nombre" required>
+            <div class="invalid-feedback">Es necesario que ingrese su nombre</div>
+        </div>
+        <div class="mb-3">
+          <label for="apellido" class="form-label">Apellido</label>
+          <input type="text" class="form-control" id="apellido" th:field="*{apellidoCliente}"
+            placeholder="Ingresa tu apellido" required>
+            <div class="invalid-feedback">Es necesario ingresar un apellido</div>
+        </div>
+        <div class="mb-3">
+          <label for="genero" class="form-label">Género</label>
+          <select class="form-select" id="genero" th:field="*{generoCliente}" required>
+            <option value="" selected>Selecciona tu género</option>
+            <option value="M">M</option>
+            <option value="F">F</option>
+          </select>
+          <div class="invalid-feedback">Debe de seleccionar un genero</div>
+        </div>
+        <div class="mb-3">
+          <label for="telefono" class="form-label">Número de Teléfono</label>
+          <input type="tel" class="form-control" id="telefono" th:field="*{numeroTelefono}"
+            placeholder="Ingresa tu número de teléfono" required>
+            <div class="invalid-feedback">Es necesario que ingreses tu número de teléfono</div>
+        </div>
+        <div class="mb-3">
+          <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+          <input type="date" class="form-control" id="fechaNacimiento" th:field="*{fechaNacimientoC}" required>
+          <div class="invalid-feedback">Debe de ingresar su fecha de nacimiento</div>
+        </div>
+        <div class="d-flex justify-content-center row">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer th:replace="~{index:: footer}"></footer>
+  <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+  <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+  <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+  <script>
+     $('#telefono').mask('0000-0000'); 
+</script>
+</body>
+
+</html>

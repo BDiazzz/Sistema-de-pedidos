@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}"></head>
+
+<body>
+    <!-- Herencia del navbar -->
+    <header th:replace="~{index::navbar}"></header>
+
+    <div class="container">
+        <!--Herencia de las  Alertas -->
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+            <h3 class="text-start col-lg-9" th:text="${'Listado de productos: '}">
+            </h3>
+            <div class="d-flex gap-2">
+                <a class="btn btn-primary Agregar-btn" th:text="@{Agregar producto}" data-bs-toggle="modal"
+                    data-bs-target="#agregarProductoModal"></a>
+            </div>
+        </div>
+        <div class="col-12 table-responsive">
+            <table class="table table-hover">
+                <thead class="thead  text-start">
+                    <tr>
+                        <th scope="col">N°</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Existencia</th>
+                        <th class="text-center" scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="fs-6">
+                    <!-- Iterar sobre la lista de Productos -->
+                    <tr th:each="producto, stat : ${listadoProductos}">
+                        <th scope="row" th:text="${stat.index + 1}"></th>
+                        <td class="" th:text="${producto.nombreProducto}"></td>
+                        <td class="" th:text="${producto.tipoProducto}"></td>
+                        <td class="" th:text="${producto.precioProducto}"></td>
+                        <td class="" th:text="${producto.existenciaProducto}"></td>
+
+                        <td class="text-center">
+                            <!-- Boton de ver -->
+                            <a class="btn btn-success ver-btn" data-bs-t="tooltip" data-bs-toggle="modal"
+                                data-bs-target="#verProductoModal" data-bs-placement="top" title="Ver"
+                                th:data-id="${producto.idProducto}" th:data-nombreProducto="${producto.nombreProducto}"
+                                th:data-tipoproducto="${producto.tipoProducto}"
+                                th:data-descripcionproducto="${producto.descripcionProducto}"
+                                th:data-precioproducto="${producto.precioProducto}"
+                                th:data-existenciaproducto="${producto.existenciaProducto}"
+                                th:data-verimagen="${producto.enlaceImagen}">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </a>
+                            <!-- Boton de editar -->
+                            <a class="btn btn-primary editar-btn" data-bs-toggle="modal"
+                                data-bs-target="#actualizarProductoModal" data-bs-placement="top" title="Editar"
+                                data-bs-t="tooltip" th:data-id="${producto.idProducto}"
+                                th:data-nombreproducto="${producto.nombreProducto}"
+                                th:data-tipoproducto="${producto.tipoProducto}"
+                                th:data-descripcionproducto="${producto.descripcionProducto}"
+                                th:data-precioproducto="${producto.precioProducto}"
+                                th:data-existenciaproducto="${producto.existenciaProducto}"
+                                th:data-nombreimg="${producto.nombreImg}" th:data-enlaceimgen="${producto.enlaceImagen}"
+                                th:data-idimagen="${producto.idImagen}">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <!-- Boton de eliminar -->
+                            <a class="btn btn-danger delete-btn"
+                                th:href="@{/Productos/deleteProducto/} +${producto.idProducto}" data-bs-t="tooltip"
+                                data-bs-placement="top" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- Modal de agregar Producto -->
+        <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirAgregarModalLabel">Agregar Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Formulario de agregar nuevo producto -->
+                    <form th:object="${producto}" class="needs-validation" id="formProducto" novalidate
+                        th:action="@{/Productos/guardarProducto}" th:method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="tipoFalta" class="form-label">Nombre producto</label>
+                                <input type="text" class="form-control border-secondary border-opacity-50"
+                                    id="nombreProducto" th:field="*{nombreProducto}" required>
+                                <div class="invalid-feedback">Es necesario ingresar el nombre del producto</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcionFalta" class="form-label">Descripción</label>
+                                <textarea th:field="*{descripcionProducto}"
+                                    class="form-control no-resize border-secondary border-opacity-50"
+                                    id="descripcionProducto" rows="3" maxlength="200" required ></textarea>
+                                <div class="invalid-feedback">Es necesario ingresar la descripción del producto</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipoFalta" class="form-label">Tipo</label>
+                                <select th:field="*{tipoProducto}"
+                                    class="form-select border-secondary border-opacity-50" id="tipoProducto" required>
+                                    <option value="" selected>Selecciona el tipp de producto</option>
+                                    <option value="Bebida">Bebida</option>
+                                    <option value="Platillo">Platillo</option>
+                                    <option value="Adereso">Adereso</option>
+                                </select>
+                                <div class="invalid-feedback">Es necesario seleccionar el tipo de producto</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="accionCorrectiva" class="form-label">Precio</label>
+                                <input type="number" class="form-control border-secondary border-opacity-50"
+                                    id="notaObtenida" th:field="*{precioProducto}" min="0.1" step="0.01" required />
+                                <div class="invalid-feedback">Es necesario que complete este campo</div>
+                            </div>
+                            <!-- NUEVO: Campo para subir imagen -->
+                            <div class="mb-3">
+                                <label for="datosImg" class="form-label">Imagen del producto</label>
+                                <input type="file" class="form-control border-secondary border-opacity-50" id="datosImg"
+                                    name="datosImg" accept="image/*" required />
+                                <div class="invalid-feedback">Es necesario subir una imagen del producto</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer text-center">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="cancelarProducto">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de actualizar Producto -->
+        <div class="modal fade" id="actualizarProductoModal" tabindex="-1"
+            aria-labelledby="actualizarProductoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirAgregarModalLabel">Actualizar producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Formulario de agregar nuevo producto -->
+                    <!-- Campos del modal de actualizar -->
+                    <form th:object="${producto}" class="needs-validation" id="formProductos" novalidate
+                        th:action="@{/Productos/actualizarProducto}" th:method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <input type="hidden" id="idProducto" name="idProducto" th:field="*{idProducto}" />
+                            <input type="hidden" id="editNombreImgen" name="nombreImg">
+                            <input type="hidden" id="editEnlaceimagen" name="enlaceImagen">
+                            <input type="hidden" id="editIdImagen" name="idImagen">
+
+                            <div class="mb-3">
+                                <label for="editNombreProducto" class="form-label">Nombre producto</label>
+                                <input type="text" class="form-control" id="editNombreProducto" name="nombreProducto"
+                                    th:field="*{nombreProducto}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescripcionProducto" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="editDescripcionProducto" name="descripcionProducto"
+                                    th:field="*{descripcionProducto}" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTipoProducto" class="form-label">Tipo</label>
+                                <select class="form-select" id="editTipoProducto" name="tipoProducto"
+                                    th:field="*{tipoProducto}" required>
+                                    <option value="" selected>Selecciona el tipo</option>
+                                    <option value="Bebida">Bebida</option>
+                                    <option value="Platillo">Platillo</option>
+                                    <option value="Adereso">Adereso</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrecio" class="form-label">Precio</label>
+                                <input type="number" class="form-control" id="editPrecio" name="precioProducto"
+                                    th:field="*{precioProducto}" min="0.1" step="0.01" required>
+                            </div>
+                            <div class="mb-3 form-check form-switch">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Existencia</label>
+                                <input class="form-check-input" type="checkbox" id="editExistencia"
+                                    name="existenciaProducto" th:field="*{existenciaProducto}">
+                            </div>
+                            <!-- Mostrar enlace o imagen -->
+                            <div class="mb-3">
+                                <label class="form-label">Imagen Actual</label>
+                                <div>
+                                    <img id="editVerImagen" alt="Imagen del producto" class="img-fluid rounded border"
+                                        style="max-width: 100%; height: auto;">
+
+                                </div>
+                            </div>
+                            <!-- Opción para eliminar la imagen -->
+                            <!-- <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="eliminarImagen"
+                                    name="eliminarImagen" />
+                                <label class="form-check-label" for="eliminarImagen">Eliminar Imagen</label>
+                            </div> -->
+                            <!-- Nueva imagen -->
+                            <div class="mb-3">
+                                <label for="archivoImg" class="form-label">Nueva Imagen (opcional)</label>
+                                <input type="file" class="form-control" id="archivoImg" name="archivoImg" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal ver detalles del producto -->
+        <div class="modal fade" id="verProductoModal" tabindex="-1" aria-labelledby="actualizarProductoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg"> <!-- Ampliar tamaño del modal -->
+                <div class="modal-content">
+                    <div class="modal-header bg-naranja text-white">
+                        <h5 class="modal-title" id="confirAgregarModalLabel">Detalles del producto</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <!-- Fila para mostrar detalles en dos columnas -->
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Nombre producto:</div>
+                                <div class="col-md-8" id="verNombreProducto"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Descripción:</div>
+                                <div class="col-md-8" id="verDescripcionProducto"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Tipo:</div>
+                                <div class="col-md-8" id="verTipoProducto"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Precio:</div>
+                                <div class="col-md-8 text-success" id="verPrecio"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">En existencia:</div>
+                                <div class="col-md-8" id="verExistencia"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">IMAGEN:</div>
+                                <div class="col-md-8">
+                                    <img id="verImagen" alt="Imagen del producto" class="img-fluid rounded border"
+                                        style="max-width: 100%; height: auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de Confirmación de eliminar -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{index::footer}"></footer>
+        <script type="text/javascript" th:src="@{/js/gestionProducto.js}"></script>
+        <!-- Js para validar formulario recordando que debe de agregar la clase "needs-validation" al form 
+         y también el atributo "novalidate" y debajo de cada input que quiere validar ponen <div class="invalid-feedback">aca ponen el mensaje que quieren que se muestre</div> 
+         para mayor referencia vean el formulario de agregar productos que está arriba linea 87-->
+        <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+        <!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+        <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+        <!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+         title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+        <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+
+</body>
+
+</html>

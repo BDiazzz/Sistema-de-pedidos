@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <!-- Navbar superior visible en todos los dispositivos -->
+    <header th:fragment="menuSuperior">
+        <nav class="navbar navbar-expand-lg custom-navbar">
+            <div class="container-fluid">
+                <div class="row w-100 align-items-center">
+                    <!-- Logo del restaurante -->
+                    <div class="col-4 text-start">
+                        <a class="navbar-brand text-white fw-bold" th:href="@{/}">Te lo llevo ya</a>
+                    </div>
+    
+                    <!-- Título centrado -->
+                    <div class="col-4 text-center">
+                        <!-- <h5 class="text-white mb-0 fs-5" th:text="${tituloMenu}">Pedidos</h5> -->
+                        <span class="text-white mb-0 fs-6" th:text="${tituloMenu}"></span>
+                    </div>
+    
+                    <!-- Carrito de compras -->
+                    <div class="col-4 text-end">
+                        <ul class="navbar-nav d-inline-block">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" th:href="@{/Cliente/verCarrito}">
+                                    <i class="bi bi-cart"></i> Carrito
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>    
+    <div th:fragment="menuSuperiorCarrito">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <div class="row w-100 align-items-center">
+                    <!-- Logo del restaurante -->
+                    <div class="col-2 text-start">
+                        <a class="navbar-brand  fw-bold" th:href="${urlAtras}"><i class="bi bi-chevron-left"></i></a>
+                    </div>
+    
+                    <!-- Título centrado -->
+                    <div class="col-8 text-center">
+                        <!-- <h5 class="text-white mb-0 fs-5" th:text="${tituloMenu}">Pedidos</h5> -->
+                        <h5 class=" mb-0  text-center" th:text="${tituloMenu}" > Carrito</h5>
+                    </div>
+    
+                    <!-- Carrito de compras -->
+                    <!-- <div class="col-4 text-end">
+                        <ul class="navbar-nav d-inline-block">
+                            <li class="nav-item">
+                                <a class="nav-link " th:href="@{/Cliente/verCarrito}">
+                                    <i class="bi bi-cart"></i> Carrito
+                                </a>
+                            </li>
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-3 mb-5">
+        <!-- Mensajes -->
+        <div th:replace="~{alertas::alertas}"></div>
+        
+        <!-- Jumbotron -->
+        <div class="jumbotron mb-3 bg-light rounded-3 px-3 py-3">
+            <div class="container text-center">
+                <h1 class="display-5 fw-bold">Bienvenido cliente</h1>
+                <p class="fs-5">Accede a toda la herramienta para la gestión eficiente de tu restaurante.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar inferior para dispositivos móviles -->
+    <div th:fragment="menuInferior">
+        <div class="navbar navbar-expand-lg custom-navbar fixed-bottom ">
+            <div class="container-fluid d-flex justify-content-around">                
+                <a class="nav-link text-center text-white" th:href="@{/Cliente/RealizarPedido}">
+                    <i th:if="${activeOrdernar==null}" class="bi bi-egg"></i>
+                    <i th:if="${activeOrdernar==true}"  class="bi bi-egg-fill"></i>
+                    <div class="small">Ordenar</div>
+                </a>
+                <a class="nav-link text-center text-white" th:href="@{/Cliente/RegistrosPedidos}">
+                    <i th:if="${activePedidos==null}" class="bi bi-sticky"></i>
+                    <i th:if="${activePedidos==true}" class="bi bi-sticky-fill"></i>
+                    <div class="small">Pedidos</div>
+                </a>
+                <a class="nav-link text-center text-white" th:href="@{/registroPuntos}">
+                   
+                    <i th:if="${activePuntos==null}" class="bi bi-star"></i>
+                    <i th:if="${activePuntos==true}" class="bi bi-star-fill"></i>
+                    <div class="small">Puntos</div>
+                </a>
+                <a class="nav-link text-center text-white" th:href="@{/Cliente/perfil}">
+                    <i th:if="${activePerson==null}" class="bi bi-person"></i>
+                    <i th:if="${activePerson==true}" class="bi bi-person-fill"></i>
+                    <div class="small">Perfil</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <footer th:fragment="footer">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+    </footer>
+</body>
+
+</html>

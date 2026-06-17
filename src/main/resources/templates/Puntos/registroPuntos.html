@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index:: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text= "${titulo}"></title>
+</head>
+<body>
+    <header th:replace="~{homeCliente::menuSuperior}"></header>
+    <div class="container mt-3 my-5">
+        <!--H1 con H2 mostrando los puntos-->
+        <div class="row mt-2 justify-content-center pb-4">
+        <div class="card col-10 p-4 mt-2" style="border-color: #502314;">
+            <div class="text-end pt-4" style="color: #502314;">
+                <i class="bi bi-exclamation-circle-fill fs-4 pe-2"
+                data-bs-t="tooltip" data-bs-placement="left"
+                title="100pts = $1"></i>
+            </div>
+            <h1 class="text-center">Puntos acumulados</h1>
+            <h2 class="text-center fw-bold"><i class="bi bi-stars"></i><span th:text="${sumaPuntos}"></span></h2>
+            <!--barra progresiva-->
+            <div class="progress mt-2" role="progressbar" aria-label="Example 20px high" aria-valuenow="${valorProgreso}" aria-valuemin="0" aria-valuemax="100" style="height: 20px;">
+                <div class="progress-bar" th:style="'width: ' + ${valorProgreso} + '%; background-color: #e66322;'"></div>
+            </div>
+            <!--Progreso en dolares-->
+            <div class="col-12 d-flex justify-content-between fs-5 p-3 mb-2 fw-bold">
+                <p>$<span th:text="${dolares}"></span></p>
+                <p>$<span th:text="${dolares2}"></span></p>
+            </div>
+              </div>
+        </div>
+        <!--Movimiento de puntos-->
+        <div class="row justify-content-center mb-4">
+            <div class="card col-10 align-items-center pb-4" style="border-color: #502314;">
+            <h3 class="p-3 col-9"><i class="bi bi-book"></i> Movimiento de puntos:</h3>
+            <div th:each="punto : ${puntos}" class="col-10 d-flex justify-content-between fs-5 p-3 mb-2" style="background-color: #e66322; color: white;" id="punto-container">
+                <div class="fecha-container">
+                    <span th:text="${#dates.format(punto.fechaTransaccion, 'dd-MM-yyyy')}"></span>
+                </div>
+                <div class="puntos-container">
+                    <span th:if="${punto.cantidadPuntos < 0}">Canjeaste <span th:text="${-1*punto.cantidadPuntos}"></span>pts.</span>
+                    <span th:if="${punto.cantidadPuntos > 0}">Ganaste <span th:text="${punto.cantidadPuntos}"></span>pts.</span>
+                </div>
+            </div>            
+        </div>
+        </div>
+        </div>   
+    </div>
+    <div class="py-3"></div>
+    <div th:replace="~{homeCliente::menuInferior}"></div>
+    <footer th:replace="~{index:: footer}"></footer>
+         <!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+         title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+        <script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{index::head}">
+</head>
+
+<body>
+    <header th:replace="~{index::navbar}"></header>
+    <div class="container d-flex justify-content-center mt-5">
+        <div th:replace="~{alertas::alertas}"></div>
+        <div class="card shadow w-50 p-4">
+            <h2 class="text-center mb-4 text-primary">Registrar Cliente</h2>
+            <form th:object="${cliente}" class="needs-validation" id="formCliente" novalidate
+                th:action="@{/Cliente/guardar}" method="post">
+                <!-- Campo Nombres -->
+                <div class="mb-3">
+                    <label for="nombres" class="form-label fw-bold">Nombres:</label>
+                    <input type="text" class="form-control rounded-pill" placeholder="Ingrese nombres"
+                        id="nombreCliente" th:field="*{nombreCliente}" required>
+                    <div class="invalid-feedback">Es necesario ingresar el nombre del cliente</div>
+                </div>
+                <!-- Campo Apellidos -->
+                <div class="mb-3">
+                    <label for="apellidos" class="form-label fw-bold">Apellidos:</label>
+                    <input type="text" class="form-control rounded-pill" id="apellidoCliente"
+                        placeholder="Ingrese apellidos" th:field="*{apellidoCliente}" required>
+                    <div class="invalid-feedback">Es necesario ingresar el apellido</div>
+                </div>
+                <!-- Campo Sexo -->
+                <div class="mb-3">
+                    <label for="sexo" class="form-label fw-bold">Sexo:</label>
+                    <select class="form-select rounded-pill" id="generoCliente" th:field="*{generoCliente}" required>
+                        <option value="" selected>Seleccione</option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                    <div class="invalid-feedback">Es necesario seleccionar el sexo</div>
+                </div>
+                <!-- Campo Correo -->
+                <div class="mb-3">
+                    <label for="correo" class="form-label fw-bold">Correo:</label>
+                    <input type="email" class="form-control rounded-pill" id="correoUsuario" name="correoUsuario"
+                        placeholder="Ingrese correo electrónico" required>
+                    <div class="invalid-feedback">Es necesario ingresar el correo</div>
+                </div>
+                <!-- Campo Dirección -->
+                <div class="mb-3">
+                    <label for="direccion" class="form-label fw-bold">Dirección:</label>
+                    <textarea class="form-control" id="direccion" name="direccion" rows="3"
+                        placeholder="Ingrese dirección" required></textarea>
+                    <div class="invalid-feedback">Es necesario ingresar la dirección</div>
+                </div>
+                <!-- Botones -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Guardar</button>
+                    <a th:href="@{/}" class="btn btn-danger rounded-pill px-4">Cancelar</a>
+                    <!-- <button type="reset" class="btn btn-danger rounded-pill px-4" onclick="window.location.href='/Pedidos/Inicio';">Cancelar</button> -->
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer th:replace="~{index::footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+</body>
+
+</html>
